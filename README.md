@@ -1,4 +1,8 @@
 # tg-file-id
+[![Publish on npm](https://github.com/smaznet/tg-file-id/actions/workflows/npm.yml/badge.svg)](https://github.com/smaznet/tg-file-id/actions/workflows/npm.yml)
+[![npm version](https://badge.fury.io/js/tg-file-id.svg)](https://badge.fury.io/js/tg-file-id)
+
+
 A simple nodejs module to decode file_id and file_uniq_id of telegram bots
 
 
