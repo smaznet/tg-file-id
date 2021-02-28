@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: yarn install
+      - run: npm ci --ignore-scripts
       # set up git since we will later push to the repo
       - run: git config --global user.name "GitHub CD bot"
       - run: git config --global user.email "savchenkoalexander91@gmail.com"
