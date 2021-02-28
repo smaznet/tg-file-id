@@ -34,3 +34,8 @@ result will be:
 ```js
 { typeId: 2, type: 'document', id: 5899747659685562555n }
  ```
+
+## TODO:
+- [ ] add function to make file_id from result like input
+- [ ] create class named FileId and UniqueFileId to set or get fields and functions like fromFileId or toFileId
+- [ ] convert file_ids to file_uniq_id 
