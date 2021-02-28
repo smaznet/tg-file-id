@@ -6,11 +6,7 @@ const PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL = 2;
 const PHOTOSIZE_SOURCE_DIALOGPHOTO_BIG = 3;
 const PHOTOSIZE_SOURCE_STICKERSET_THUMBNAIL = 4;
 const UNIQUE_WEB = 0;
-const UNIQUE_PHOTO = 1;
-const UNIQUE_DOCUMENT = 2;
-const UNIQUE_SECURE = 3;
-const UNIQUE_ENCRYPTED = 4;
-const UNIQUE_TEMP = 5;
+
 
 class Util {
   static FLAGS = {
@@ -170,7 +166,7 @@ class Util {
           out.localId = rlDecoded.readInt32LE(20);
           break;
         case PHOTOSIZE_SOURCE_THUMBNAIL:
-          out.fileType = rlDecoded.readUInt32LE(12);
+          out.fileType = Util.TYPES[rlDecoded.readUInt32LE(12)];
           out.thumbnailType = rlDecoded.slice(16, 20).toString().replace(/\u0000/g, '')
           out.localId = rlDecoded.readInt32LE(20);
           break;
@@ -205,7 +201,7 @@ class Util {
     rlDecoded = rlDecoded.slice(4);
 
     if (out.typeId === UNIQUE_WEB) {
-      let {x, newData} = Util.readTLString(rlDecoded.slice())
+      let {x} = Util.readTLString(rlDecoded.slice())
       out.url = x.toString();
 
     } else if (rlDecoded.length === 12) {

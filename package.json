@@ -1,11 +1,11 @@
 {
   "name": "tg-file-id",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\""
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
