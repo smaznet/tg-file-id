@@ -27,9 +27,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm install
-      - run: npm run build
       - run: npm ci --ignore-scripts
+      # - run: npm install
+      - run: npm run build
+
       - run: git config --global user.name "GitHub CD bot"
       - run: git config --global user.email "savchenkoalexander91@gmail.com"
       - run: npm version ${{ github.event.release.tag_name }}
