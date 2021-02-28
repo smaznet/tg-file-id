@@ -1,10 +1,10 @@
 {
 	"compilerOptions": {
+		"strict": true,
 		"module": "CommonJS",
-		"esModuleInterop": true,
 		"target": "es2017",
 		"noImplicitAny": true,
-		"declaration": false,
+		"declaration": true,
 		"moduleResolution": "Node",
 		"sourceMap": false,
 		"outDir": "./dist"
