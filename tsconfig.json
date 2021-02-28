@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"esModuleInterop": true,
+		"target": "es2017",
+		"noImplicitAny": true,
+		"declaration": false,
+		"moduleResolution": "Node",
+		"sourceMap": false,
+		"outDir": "./dist"
+	},
+	"exclude": [
+		"node_modules"
+	]
+}
