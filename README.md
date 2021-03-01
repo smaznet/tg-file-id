@@ -36,8 +36,16 @@ let result = f.decodeUniqFileId('AgADuwgAAj0d4FE');
 ```
 result will be:
 ```js
-{ typeId: 2, type: 'document', id: 5899747659685562555n }
+let result = { typeId: 2, type: 'document', id: 5899747659685562555n }
  ```
+
+### Convert file_id to file_uniq_id
+```js
+let {FileId} = require("tg-file-id");
+let uniqFileId = FileId.fromFileId('AwACAgQAAxkBAAEE3SZgO-PbHlWtxRt5cPWvXlGRWHXM3AACuwgAAj0d4FF_jv-i_-7iQR4E').toFileUniqId();
+
+// outputs: AwADuwgAAj0d4FE
+```
 
 ## TODO:
 - [ ] add function to make file_id from result like input
