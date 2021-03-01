@@ -4,12 +4,6 @@ name: Publish on npm
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -30,3 +24,13 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run build
       - run: npm run test
+      - run: git config --global user.name "GitHub CD bot"
+      - run: git config --global user.email "savchenkoalexander91@gmail.com"
+      - run: npm version ${{ github.event.release.tag_name }}
+      - run: npm config set '//registry.npmjs.org/:_authToken' "${{ secrets.NPM_TOKEN }}"
+      - run: npm publish
+          env:
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: git push
+          env:
+             github-token: ${{ secrets.GITHUB_TOKEN }}

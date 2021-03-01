@@ -19,7 +19,8 @@ export type FileIdInfo = {
   dialogAccessHash?: number | bigint
   stickerSetId?: number | bigint,
   stickerSetAccessHash?: number | bigint
-  localId?: number
+  localId?: number,
+  thumbTypeId?: number
 }
 export type UniqFileIdInfo = {
   type: string,

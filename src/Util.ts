@@ -1,18 +1,22 @@
 import {FileIdInfo, UniqFileIdInfo} from "./types/FileIdInfo";
 
-const PHOTOSIZE_SOURCE_LEGACY = 0;
-const PHOTOSIZE_SOURCE_THUMBNAIL = 1;
-const PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL = 2;
-const PHOTOSIZE_SOURCE_DIALOGPHOTO_BIG = 3;
-const PHOTOSIZE_SOURCE_STICKERSET_THUMBNAIL = 4;
-const UNIQUE_WEB = 0;
-
 
 class Util {
   static FLAGS = {
     FILE_REFERENCE_FLAG: 1 << 25,
     WEB_LOCATION_FLAG: 1 << 24
   }
+  static PHOTOSIZE_SOURCE_LEGACY = 0;
+  static PHOTOSIZE_SOURCE_THUMBNAIL = 1;
+  static PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL = 2;
+  static PHOTOSIZE_SOURCE_DIALOGPHOTO_BIG = 3;
+  static PHOTOSIZE_SOURCE_STICKERSET_THUMBNAIL = 4;
+  static UNIQUE_WEB = 0;
+  static UNIQUE_PHOTO = 1;
+  static UNIQUE_DOCUMENT = 2;
+  static UNIQUE_SECURE = 3;
+  static UNIQUE_ENCRYPTED = 4;
+  static UNIQUE_TEMP = 5;
   static TYPES = [
     'thumbnail',
     'profile_photo',
@@ -61,6 +65,26 @@ class Util {
     return Buffer.from(str, 'binary');
   }
 
+  static rleEncode(input: string) {
+    let newStr = '';
+    let count = 0;
+    let nullStr = "\0";
+    for (let cur of input.split('')) {
+      if (cur === nullStr) {
+        ++count;
+      } else {
+        if (count > 0) {
+          newStr += nullStr + String.fromCharCode(count);
+          count = 0;
+        }
+        newStr += cur
+      }
+    }
+    if (count > 0) {
+      newStr += nullStr + String.fromCharCode(count);
+    }
+    return newStr;
+  }
 
   private static posmod(a: number, b: number) {
     let resto = a % b;
@@ -97,32 +121,58 @@ class Util {
     return {x, newData: data};
   }
 
-  private static packTLString(input: string) {
-    let l = Buffer.from(input).length;
+  static packTLString(input: Buffer) {
+    let l = input.length;
     let output = '';
-    console.log("L:" + l)
     if (l <= 253) {
       output += String.fromCharCode(l);
-      output += input;
+      output += input.toString('binary')
       output += "\0".repeat(Util.posmod(-l - 1, 4));
     } else {
       output += String.fromCharCode(254);
-      let buff = Buffer.alloc(32);
+      let buff = Buffer.alloc(4);
       buff.writeInt32LE(l);
       let nodeOut = buff.slice(0, 3);
-      console.log(nodeOut.toString('hex'))
       output += nodeOut.toString()
-      output += input;
+      output += input
 
       let t2 = "\0".repeat(Util.posmod(-l, 4));
       output += t2
     }
-    return output;
+    return Buffer.from(output, 'binary');
   }
 
-  private static base64UrlDecode(string: string) {
+  static base64UrlDecode(string: string) {
     return Buffer.from(string.replace(/-/g, '+')
-        .replace(/_/, '/'), 'base64');
+        .replace(/_/g, '/'), 'base64');
+  }
+
+  static base64UrlEncode(input: Buffer | string) {
+    if (typeof input === 'string') {
+      input = Buffer.from(input, 'binary')
+    }
+    return input.toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+  }
+
+  static to64bitBuffer(input: bigint) {
+    let tmp = Buffer.alloc(8);
+    tmp.writeBigUInt64LE(input);
+    return tmp.toString('binary');
+  }
+
+  static to32bitBuffer(input: number) {
+    let tmp = Buffer.alloc(4);
+    tmp.writeUInt32LE(input);
+    return tmp.toString('binary');
+  }
+
+  static to32bitSignedBuffer(input: number) {
+    let tmp = Buffer.alloc(4);
+    tmp.writeInt32LE(input);
+    return tmp.toString('binary')
   }
 
   static decodeFileId(fileId: string): FileIdInfo {
@@ -161,23 +211,25 @@ class Util {
       out.photoSizeSource = out.version >= 4 ? rlDecoded.readUInt32LE(8) : 0;
 
       switch (out.photoSizeSource) {
-        case PHOTOSIZE_SOURCE_LEGACY:
+        case Util.PHOTOSIZE_SOURCE_LEGACY:
           out.secret = rlDecoded.readBigInt64LE(12);
           out.localId = rlDecoded.readInt32LE(20);
           break;
-        case PHOTOSIZE_SOURCE_THUMBNAIL:
-          out.fileType = Util.TYPES[rlDecoded.readUInt32LE(12)];
+        case Util.PHOTOSIZE_SOURCE_THUMBNAIL:
+          let typeId = rlDecoded.readUInt32LE(12);
+          out.fileType = Util.TYPES[typeId];
+          out.thumbTypeId = typeId;
           out.thumbnailType = rlDecoded.slice(16, 20).toString().replace(/\u0000/g, '')
           out.localId = rlDecoded.readInt32LE(20);
           break;
-        case PHOTOSIZE_SOURCE_DIALOGPHOTO_BIG:
-        case PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL:
-          out.photoSize = out.photoSizeSource === PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL ? "small" : 'big';
+        case Util.PHOTOSIZE_SOURCE_DIALOGPHOTO_BIG:
+        case Util.PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL:
+          out.photoSize = out.photoSizeSource === Util.PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL ? "small" : 'big';
           out.dialogId = rlDecoded.readBigUInt64LE(12);
           out.dialogAccessHash = rlDecoded.readBigUInt64LE(20);
           out.localId = rlDecoded.readInt32LE(28);
           break;
-        case PHOTOSIZE_SOURCE_STICKERSET_THUMBNAIL:
+        case Util.PHOTOSIZE_SOURCE_STICKERSET_THUMBNAIL:
           out.stickerSetId = rlDecoded.readBigUInt64LE(12);
           out.stickerSetAccessHash = rlDecoded.readBigUInt64LE(20)
           out.localId = rlDecoded.readInt32LE(28);
@@ -200,7 +252,7 @@ class Util {
     out.type = Util.UNIQUE_TYPES[out.typeId]
     rlDecoded = rlDecoded.slice(4);
 
-    if (out.typeId === UNIQUE_WEB) {
+    if (out.typeId === Util.UNIQUE_WEB) {
       let {x} = Util.readTLString(rlDecoded.slice())
       out.url = x.toString();
 
@@ -219,3 +271,9 @@ class Util {
 }
 
 export default Util;
+// 030000020400000019010004dd26603be3db1e55adc51b7970f5af5e51915875ccdc0000bb0800003d1de0517f8effa2ffeee2411e04
+// 0300000219010004dd26603be3db1e55adc51b7970f5af5e51915875ccdc0000bb0800003d1de05100000000000000001e04
+
+// 030000020400000019010004dd26603be3db1e55adc51b7970f5af5e51915875ccdc0000bb0800003d1de0517f8effa2ffeee2411e04
+// 0300000219010004dd26603be3db1e55adc51b7970f5af5e51915875ccdc0000bb0800003d1de05100000000000000001e04
+

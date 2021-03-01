@@ -1,5 +1,7 @@
 var assert = require('assert');
 var tgFileId = require('../dist/index');
+var FileId = require('../dist/FileId').default;
+var FileUniqId = require('../dist/FileUniqId').default;
 describe('Testing some file_ids', function() {
   let fileIds = {
     sticker: 'CAACAgEAAxkBAAEE3SRgO-OW-HDMHW5rOGsSFWhZScQl4AAC8BIAApa4VwXGFC4AAaCSsQMeBA',
@@ -12,6 +14,15 @@ describe('Testing some file_ids', function() {
       it('should return fileType ' + key, function() {
         let output = tgFileId.decodeFileId(fileIds[key]);
         assert.strictEqual(key, output.fileType);
+      });
+      it('should return same fileId', function() {
+        let fId = FileId.fromFileId(fileIds[key]);
+        assert.strictEqual(fileIds[key], fId.toFileId());
+      });
+      it('should return same id for FileUniqId and FileId', function() {
+        let fId = FileId.fromFileId(fileIds[key]);
+        let fU = FileUniqId.fromFileId(fileIds[key]);
+        assert.strictEqual(fId.id, fU.id);
       });
     });
   }
@@ -59,7 +70,7 @@ describe('Testing some file_uniq_ids', function() {
         }else if (type === 'document') {
           assert.strictEqual(out.id, fileUniqIds[type].id);
         }
-        assert.strictEqual(out.typeId,fileUniqIds[type].typeId)
+        assert.strictEqual(out.typeId, fileUniqIds[type].typeId);
         assert.strictEqual(type, out.type);
       });
     });
