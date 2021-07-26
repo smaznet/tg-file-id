@@ -152,8 +152,19 @@ class FileId {
     out += String.fromCharCode(this.version);
     return Util.base64UrlEncode(Util.rleEncode(out));
   }
-  toFileUniqId(){
+
+  toFileUniqId() {
     return FileUniqId.fromFileIdInstance(this).toFileUniqId();
+  }
+
+  getOwnerId() {
+    if (this.typeId === Util.TYPES.indexOf('sticker') && (this.version === 4 || this.version === 2)) {
+      console.log(this.id)
+      let tmp = Buffer.alloc(8);
+      tmp.writeBigInt64LE(this.id & BigInt('72057589742960640'));
+      return tmp.readUInt32LE(4);
+    }
+    return 0;
   }
 }
 
