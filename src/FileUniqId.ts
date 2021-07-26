@@ -4,11 +4,11 @@ import FileId from "./FileId";
 import {UniqFileIdInfo,FileIdInfo} from "./types/FileIdInfo";
 
 class FileUniqId {
-  private type: number = 0;
-  private id?: bigint;
-  private volumeId?: bigint;
-  private localId?: number | bigint;
-  private url?: string;
+  public type: number = 0;
+  public id?: bigint;
+  public volumeId?: bigint;
+  public localId?: number | bigint;
+  public url?: string;
 
   static fromFileId(fileId: string) {
     let result = decodeFileId(fileId);

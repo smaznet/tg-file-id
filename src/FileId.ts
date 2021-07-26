@@ -3,33 +3,34 @@ import Util from "./Util";
 import FileUniqId from "./FileUniqId";
 
 class FileId {
-  private version = 0;
-  private subVersion = 0;
-  private dcId = 0;
+  public version = 0;
+  public subVersion = 0;
+  public dcId = 0;
   public typeId = 0;
-  private fileType: string | number = '';
-  private fileReference?: string;
+  public fileType: string | number = '';
+  public fileReference?: string;
   public url?: string;
   public id: bigint = BigInt(0)
-  private accessHash: bigint = BigInt(0);
+  public accessHash: bigint = BigInt(0);
   public volumeId?: bigint = BigInt(0);
   public localId?: number | bigint = 0;
-  private photoSizeSource?: 'legacy' | 'thumbnail' | 'dialogPhoto' | 'stickerSetThumbnail'
-  private photoSizeSourceId?: number;
-  private secret?: bigint | number;
-  private dialogId?: number | bigint;
-  private dialogAccessHash?: number | bigint;
-  private isSmallDialogPhoto?: boolean;
+  public photoSizeSource?: 'legacy' | 'thumbnail' | 'dialogPhoto' | 'stickerSetThumbnail'
+  public photoSizeSourceId?: number;
+  public secret?: bigint | number;
+  public dialogId?: number | bigint;
+  public dialogAccessHash?: number | bigint;
+  public isSmallDialogPhoto?: boolean;
 
-  private stickerSetId?: number | bigint;
-  private stickerSetAccessHash?: number | bigint;
+  public stickerSetId?: number | bigint;
+  public stickerSetAccessHash?: number | bigint;
 
-  private thumbType?: string;
-  private thumbTypeId?: number;
+  public thumbType?: string;
+  public thumbTypeId?: number;
 
 
   constructor() {
   }
+
 
   static fromFileId(fileId: string) {
     try {
