@@ -5,7 +5,7 @@ A simple nodejs module to decode file\_id and file\_uniq\_id of telegram bots
 npm install tg-file-id --save
 ```
 ### FileId parameters 
-`version` : Number of bot api file_id version. Usually `4` 
+`version` : Number of bot api file_id version. Usually `4`   
 `subVersion` : Number of bot api file_id subVersion. Usually `30`.  
 `dcId` : The data center where the file is stored.  
 `typeId` : File type (number).You can see the list of file type in [here](#filetype).  
