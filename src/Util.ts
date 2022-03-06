@@ -159,7 +159,7 @@ class Util {
 
   static to64bitBuffer(input: bigint) {
     let tmp = Buffer.alloc(8);
-    tmp.writeBigUInt64LE(input);
+    tmp.writeBigInt64LE(input);
     return tmp.toString('binary');
   }
 
@@ -201,8 +201,8 @@ class Util {
       out.access_hash = rlDecoded.readBigInt64LE(8);
       return out;
     }
-    out.id = rlDecoded.readBigUInt64LE()
-    out.access_hash = rlDecoded.readBigUInt64LE(8);
+    out.id = rlDecoded.readBigInt64LE()
+    out.access_hash = rlDecoded.readBigInt64LE(8);
     rlDecoded = rlDecoded.slice(128 / 8);
     // its photo
     if (out.typeId <= 2) {
@@ -225,13 +225,13 @@ class Util {
         case Util.PHOTOSIZE_SOURCE_DIALOGPHOTO_BIG:
         case Util.PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL:
           out.photoSize = out.photoSizeSource === Util.PHOTOSIZE_SOURCE_DIALOGPHOTO_SMALL ? "small" : 'big';
-          out.dialogId = rlDecoded.readBigUInt64LE(12);
-          out.dialogAccessHash = rlDecoded.readBigUInt64LE(20);
+          out.dialogId = rlDecoded.readBigInt64LE(12);
+          out.dialogAccessHash = rlDecoded.readBigInt64LE(20);
           out.localId = rlDecoded.readInt32LE(28);
           break;
         case Util.PHOTOSIZE_SOURCE_STICKERSET_THUMBNAIL:
-          out.stickerSetId = rlDecoded.readBigUInt64LE(12);
-          out.stickerSetAccessHash = rlDecoded.readBigUInt64LE(20)
+          out.stickerSetId = rlDecoded.readBigInt64LE(12);
+          out.stickerSetAccessHash = rlDecoded.readBigInt64LE(20)
           out.localId = rlDecoded.readInt32LE(28);
           break;
       }
@@ -257,11 +257,11 @@ class Util {
       out.url = x.toString();
 
     } else if (rlDecoded.length === 12) {
-      out.volumeId = rlDecoded.readBigUInt64LE();
+      out.volumeId = rlDecoded.readBigInt64LE();
       out.localId = rlDecoded.readUInt32LE(8);
 
     } else {
-      out.id = rlDecoded.readBigUInt64LE();
+      out.id = rlDecoded.readBigInt64LE();
 
     }
     return out;
