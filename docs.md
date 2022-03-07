@@ -16,16 +16,16 @@ npm install tg-file-id --save
 `accessHash` : The accessHash of file.  
 `volumeId` : Volume id of file. If you didn't know the volumeId of your file. You can fill it with `BigInt(1)`.  
 `localId` : Local id of file. If you didn't know the localId of your file. You can fill it with `0`.  
-`photoSizeSource` : Specific photo type (string). You can see list of photoSizeSource in [here](#phototype).  
-`photoSizeSourceId` : Specific photo type (number). You can see list of photoSizeSource in [here](#phototype).  
+`photoSizeSource` : Specific photo type (string), the type is same with phototype. You can see list of photoSizeSource in [here](#phototype).  
+`photoSizeSourceId` : Specific photo type (number), the number is same with phototype. You can see list of photoSizeSource in [here](#phototype).  
 `secret` : Secret id.  
 `dialogId` : Chat id. Using to create a file id from photo profile.  
 `dialogAccessHash` : Chat accessHash. Using to create a file id from photo profile.  
 `isSmallDialogPhoto` : Do you want to make a small photo profile.  
 `stickerSetId` : Id of sticker set.  
 `stickerSetAccessHash` : Access hash of sticker set.  
-`thumbType` : Thumbnail type (string). You can see list of thumbnail type in [here](#phototype).  
-`thumbTypeId` : Thumbnail type (number). You can see list of thumbnail type in [here](#phototype).  
+`thumbType` : Thumbnail type (string), the type is same with phototype. You can see list of thumbnail type in [here](#phototype).  
+`thumbTypeId` : Thumbnail type (number), the number is same with phototype. You can see list of thumbnail type in [here](#phototype).  
 
 ### fileType 
 `thumbnail` : `0`  
